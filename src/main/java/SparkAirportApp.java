@@ -13,9 +13,16 @@ public class SparkAirportApp {
         JavaRDD<String> fligtsLines = sc.textFile(args[0]);
         JavaRDD<String> airportsLines = sc.textFile(args[1]);
 
-        JavaRDD
+        JavaRDD<String[]> parsedFLightsLines = fligtsLines.map(line ->
+                line.replaceAll("\"", "").
+                        split(","));
+        parsedFLightsLines = parsedFLightsLines.filter(col -> !col[14].equals("DEST_AIRPORT_ID"));
 
-        // TODO: Lines parser
+        JavaRDD<String[]> parsedAirportsLines = airportsLines.map(line ->
+                line.replaceAll("\"", "").
+                        split(","));
+        parsedAirportsLines = parsedAirportsLines.filter(col -> !col[14].equals("DEST_AIRPORT_ID"));
+        
         JavaPairRDD<Tuple2<String, String>, Integer> flightStatPairs = fligtsLines.mapToPair(
                 line -> new Tuple2<>(
                         new Tuple2<>()
