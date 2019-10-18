@@ -6,6 +6,8 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
 
+import java.util.Map;
+
 public class SparkAirportApp {
     private static final int AIRPORT_CODE_INDEX = 0;
     private static final int AIRPORT_DESCRIPTION_INDEX = 1;
