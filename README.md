@@ -1,5 +1,6 @@
 start-dfs.sh
-start-dfs.sh
+start-yarn.sh
+
 
 
 
