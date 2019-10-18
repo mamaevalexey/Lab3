@@ -44,6 +44,10 @@ public class SparkAirportApp {
                 .map(CSVParser::makeCols)
                 .filter(col -> !col[AIRPORT_CODE_INDEX].equals(AIRPORT_CODE_COLUMN_NAME));
 
+        JavaPairRDD<String, String> airportPairs = airportsLinesParsed.mapToPair(
+                cols -> new Tuple2<>(cols[AIRPORT_CODE_INDEX], cols[AIRPORT_DESCRIPTION_INDEX])
+        );
+        Map
 
 
         final Broadcast<Map<String, AirportData>> airportsBroadcasted =
