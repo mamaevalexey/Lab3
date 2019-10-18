@@ -12,6 +12,7 @@ import java.util.Map;
 public class SparkAirportApp {
     private static final int AIRPORT_CODE_INDEX = 0;
     private static final int AIRPORT_DESCRIPTION_INDEX = 1;
+    private static final int AIRPORT_EXTRA_DESCRIPTION_INDEX = 2;
 
     private static final int FLIGHT_ORIGIN_AIRPORT_INDEX = 11;
     private static final int FLIGHT_DEST_AIRPORT_INDEX = 14;
@@ -26,7 +27,7 @@ public class SparkAirportApp {
         SparkConf conf = new SparkConf().setAppName("Lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<String> flightsLines = sc.textFile(args[0]);
+        JavaRDD<String> flightsLines = sc.textFile("664600583_T_ONTIME_sample.csv");
         JavaRDD<String[]> flightsLinesParsed = flightsLines
                 .map(CSVParser::makeCols)
                 .filter(col -> !col[FLIGHT_DEST_AIRPORT_INDEX].equals(FLIGHT_DEST_AIRPORT_COLUMN_NAME));
@@ -42,13 +43,14 @@ public class SparkAirportApp {
                 .reduceByKey(FlightStatsKey::add);
 
 
-        JavaRDD<String> airportsLines = sc.textFile(args[1]);
+        JavaRDD<String> airportsLines = sc.textFile("L_AIRPORT_ID.csv");
         JavaRDD<String[]> airportsLinesParsed = airportsLines
                 .map(CSVParser::makeCols)
                 .filter(col -> !col[AIRPORT_CODE_INDEX].equals(AIRPORT_CODE_COLUMN_NAME));
 
         JavaPairRDD<String, String> airportsPairs = airportsLinesParsed.mapToPair(
-                cols -> new Tuple2<>(cols[AIRPORT_CODE_INDEX], cols[AIRPORT_DESCRIPTION_INDEX])
+                cols -> new Tuple2<>(cols[AIRPORT_CODE_INDEX],
+                        cols[AIRPORT_DESCRIPTION_INDEX] + (cols.length == 3 ? cols[AIRPORT_EXTRA_DESCRIPTION_INDEX] : ""))
         );
         Map<String, String> airportsMap = airportsPairs.collectAsMap();
 
@@ -56,12 +58,12 @@ public class SparkAirportApp {
                 sc.broadcast(airportsMap);
 
         JavaRDD<String> statsLines = flightsStatPairsSummarized.map(
-            pair -> airportsBroadcast.value().get(pair._1._1) + ", " +
-                    airportsBroadcast.value().get(pair._1._2) + ", " +
-                    pair._2.toString()
+                pair -> airportsBroadcast.value().get(pair._1._1) + ", " +
+                        airportsBroadcast.value().get(pair._1._2) + ", " +
+                        pair._2.toString()
         );
 
-        statsLines.saveAsTextFile(args[2]);
+        statsLines.saveAsTextFile("output3.4");
     }
 }
 
