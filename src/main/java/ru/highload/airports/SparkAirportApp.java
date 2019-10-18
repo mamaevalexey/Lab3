@@ -4,6 +4,7 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.broadcast.Broadcast;
 import scala.Tuple2;
 
 import java.util.Map;
@@ -46,14 +47,15 @@ public class SparkAirportApp {
                 .map(CSVParser::makeCols)
                 .filter(col -> !col[AIRPORT_CODE_INDEX].equals(AIRPORT_CODE_COLUMN_NAME));
 
-        JavaPairRDD<String, String> airportPairs = airportsLinesParsed.mapToPair(
+        JavaPairRDD<String, String> airportsPairs = airportsLinesParsed.mapToPair(
                 cols -> new Tuple2<>(cols[AIRPORT_CODE_INDEX], cols[AIRPORT_DESCRIPTION_INDEX])
         );
-        Map<String, String> airportsMap = airportPairs.collectAsMap();
+        Map<String, String> airportsMap = airportsPairs.collectAsMap();
 
+        final Broadcast<Map<String, String>> airportsBroadcast =
+                sc.broadcast(airportsMap);
 
-        final Broadcast<Map<String, AirportData>> airportsBroadcasted =
-                sc.broadcast(stringAirportDataMap);
+        
 
     }
 }
