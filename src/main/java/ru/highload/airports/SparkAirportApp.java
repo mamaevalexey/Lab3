@@ -56,8 +56,12 @@ public class SparkAirportApp {
                 sc.broadcast(airportsMap);
 
         JavaRDD<String> statsLines = flightsStatPairsSummarized.map(
-            pair -> 
-        )
+            pair -> airportsBroadcast.value().get(pair._1._1) + ", " +
+                    airportsBroadcast.value().get(pair._1._2) + ", " +
+                    pair._2.toString()
+        );
+
+        
 
     }
 }
