@@ -61,7 +61,7 @@ public class SparkAirportApp {
                     pair._2.toString()
         );
 
-        
+
 
     }
 }
