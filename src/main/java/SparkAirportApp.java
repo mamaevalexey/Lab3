@@ -21,8 +21,8 @@ public class SparkAirportApp {
         JavaRDD<String[]> parsedAirportsLines = airportsLines.map(line ->
                 line.replaceAll("\"", "").
                         split(","));
-        parsedAirportsLines = parsedAirportsLines.filter(col -> !col[14].equals("DEST_AIRPORT_ID"));
-        
+        parsedAirportsLines = parsedAirportsLines.filter(col -> !col[0].equals("DEST_AIRPORT_ID"));
+
         JavaPairRDD<Tuple2<String, String>, Integer> flightStatPairs = fligtsLines.mapToPair(
                 line -> new Tuple2<>(
                         new Tuple2<>()
