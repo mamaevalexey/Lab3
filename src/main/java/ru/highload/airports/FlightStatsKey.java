@@ -61,7 +61,14 @@ public class FlightStatsKey implements Serializable {
         this.flights = flights;
     }
 
-    
+    static FlightStatsKey add(FlightStatsKey a, FlightStatsKey b) {
+        return new FlightStatsKey(
+                Math.max(a.getMaxDelay(), b.getMaxDelay()),
+                a.getDelayedFlights() + b.delayedFlights,
+                a.getCancelledFlights() + b.getCancelledFlights(),
+                a.flights + b.flights
+        );
+    }
 
     @Override
     public String toString() {
