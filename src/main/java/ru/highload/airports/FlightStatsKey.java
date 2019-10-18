@@ -72,6 +72,6 @@ public class FlightStatsKey implements Serializable {
 
     @Override
     public String toString() {
-        return super.toString();
+        return 
     }
 }
