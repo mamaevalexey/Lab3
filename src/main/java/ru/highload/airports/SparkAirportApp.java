@@ -61,8 +61,7 @@ public class SparkAirportApp {
                     pair._2.toString()
         );
 
-
-
+        statsLines.saveAsTextFile(args[2]);
     }
 }
 
@@ -72,6 +71,6 @@ public class SparkAirportApp {
 // в +
 // г +
 // д +
-// е
-// ё
-// ж
+// е +
+// ё +
+// ж +
