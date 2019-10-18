@@ -27,10 +27,10 @@ public class SparkAirportApp {
 
 // Tasks:
 // a +
-// б
-// в
-// г
-// д
+// б +
+// в +-
+// г +
+// д +-
 // е
 // ё
 // ж
