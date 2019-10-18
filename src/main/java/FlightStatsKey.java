@@ -6,6 +6,13 @@ public class FlightStatsKey implements Serializable {
     private int cancelledFlights;
     private int flights;
 
+    public FlightStatsKey(float maxDelay, int lateFlights, int cancelledFlights, int flights) {
+        this.maxDelay = maxDelay;
+        this.lateFlights = lateFlights;
+        this.cancelledFlights = cancelledFlights;
+        this.flights = flights;
+    }
+
     public float getMaxDelay() {
         return maxDelay;
     }
