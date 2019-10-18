@@ -9,6 +9,9 @@ public class SparkAirportApp {
         JavaSparkContext sc = new JavaSparkContext(conf);
 
         JavaRDD<String> fligtsFile = sc.textFile(args[0]);
+        JavaRDD<String> airportsFile = sc.textFile(args[1]);
+
+        
 
     }
 }
