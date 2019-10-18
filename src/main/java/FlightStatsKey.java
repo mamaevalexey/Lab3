@@ -13,7 +13,15 @@ public class FlightStatsKey implements Serializable {
         this.flights = flights;
     }
 
-    public FlightStatsKey()
+    public FlightStatsKey(String delay, String cancelled){
+        if (delay.equals("")){
+            this.maxDelay = 0.f;
+        } else {
+            this.maxDelay = Float.parseFloat(delay);
+        }
+
+        
+    }
 
     public float getMaxDelay() {
         return maxDelay;
