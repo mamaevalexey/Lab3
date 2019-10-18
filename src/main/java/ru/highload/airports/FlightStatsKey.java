@@ -61,6 +61,8 @@ public class FlightStatsKey implements Serializable {
         this.flights = flights;
     }
 
+    
+
     @Override
     public String toString() {
         return super.toString();
