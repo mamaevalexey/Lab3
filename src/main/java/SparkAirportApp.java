@@ -7,6 +7,17 @@ public class SparkAirportApp {
         SparkConf conf = new SparkConf().setAppName("Lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
+                
 
     }
 }
+
+// Tasks:
+// a +
+// б
+// в
+// г
+// д
+// е
+// ё
+// ж
