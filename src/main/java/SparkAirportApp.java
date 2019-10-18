@@ -13,7 +13,14 @@ public class SparkAirportApp {
         JavaRDD<String> fligtsLines = sc.textFile(args[0]);
         JavaRDD<String> airportsLines = sc.textFile(args[1]);
 
-        JavaPairRDD<Tuple2<String, String>, Integer> flightStatPirs = fligtsLines.
+
+        // TODO: Lines parser
+        // TODO: StatClass
+        JavaPairRDD<Tuple2<String, String>, Integer> flightStatPirs = fligtsLines.mapToPair(
+                line -> new Tuple2<>(
+                        new Tuple2<>()
+                )
+        )
 
     }
 }
