@@ -1,14 +1,15 @@
 import java.io.Serializable;
 
 public class FlightStatsKey implements Serializable {
+    private static final float EPS = 1e-9f;
     private float maxDelay;
-    private int lateFlights;
+    private int delayedFlights;
     private int cancelledFlights;
     private int flights;
 
-    public FlightStatsKey(float maxDelay, int lateFlights, int cancelledFlights, int flights) {
+    public FlightStatsKey(float maxDelay, int delayedFlights, int cancelledFlights, int flights) {
         this.maxDelay = maxDelay;
-        this.lateFlights = lateFlights;
+        this.delayedFlights = delayedFlights;
         this.cancelledFlights = cancelledFlights;
         this.flights = flights;
     }
@@ -16,19 +17,22 @@ public class FlightStatsKey implements Serializable {
     public FlightStatsKey(String delay, String cancelled){
         if (delay.equals("")){
             this.maxDelay = 0.f;
+            this.delayedFlights = 0;
         } else {
             this.maxDelay = Float.parseFloat(delay);
+            this.delayedFlights = (maxDelay > EPS ? 1 : 0);
         }
 
-        
+        this.cancelledFlights = (Float.parseFloat(cancelled) > EPS ? 1 : 0);
+        this.flights = 1;
     }
 
     public float getMaxDelay() {
         return maxDelay;
     }
 
-    public int getLateFlights() {
-        return lateFlights;
+    public int getDelayedFlights() {
+        return delayedFlights;
     }
 
     public int getCancelledFlights() {
@@ -43,8 +47,8 @@ public class FlightStatsKey implements Serializable {
         this.maxDelay = maxDelay;
     }
 
-    public void setLateFlights(int lateFlights) {
-        this.lateFlights = lateFlights;
+    public void setDelayedFlights(int delayedFlights) {
+        this.delayedFlights = delayedFlights;
     }
 
     public void setCancelledFlights(int cancelledFlights) {

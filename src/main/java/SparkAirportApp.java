@@ -5,6 +5,17 @@ import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
 
 public class SparkAirportApp {
+    private static final int AIRPORT_CODE_INDEX = 0;
+    private static final int AIRPORT_DESCRIPTION_INDEX = 1;
+
+    private static final int DEST_AIRPORT_INDEX = 14;
+    private static final int DEST_AIRPORT_INDEX = 14;
+    private static final int DELAY_INDEX = 18;
+    private static final int CANCELLED_INDEX = 19;
+
+    private static final String AIRPORT_ID_COLUMN_NAME = "Code";
+    private static final String DEST_AIRPORT_COLUMN_NAME = "DEST_AIRPORT_ID";
+
     public static void main(String[] args) {
 
         SparkConf conf = new SparkConf().setAppName("Lab3");
@@ -14,7 +25,7 @@ public class SparkAirportApp {
         JavaRDD<String[]> flightsLinesParsed = flightsLines.map(line ->
                 line.replaceAll("\"", "").
                         split(","));
-        flightsLinesParsed = flightsLinesParsed.filter(col -> !col[14].equals("DEST_AIRPORT_ID"));
+        flightsLinesParsed = flightsLinesParsed.filter(col -> !col[DEST_AIRPORT_INDEX].equals(DEST_AIRPORT_COLUMN_NAME));
 
 
         JavaRDD<String> airportsLines = sc.textFile(args[1]);
