@@ -35,11 +35,12 @@ public class SparkAirportApp {
                 .filter(col -> !col[AIRPORT_CODE_INDEX].equals(AIRPORT_CODE_COLUMN_NAME));
 
 
-        JavaPairRDD<Tuple2<String, String>, Integer> flightStatPairs = flightsLines.mapToPair(
+        JavaPairRDD<Tuple2<String, String>, FlightStatsKey> flightStatPairs = flightsLinesParsed.mapToPair(
                 line -> new Tuple2<>(
-                        new Tuple2<>()
+                        new Tuple2<>(line[FLIGHT_ORIGIN_AIRPORT_INDEX], line[FLIGHT_DEST_AIRPORT_INDEX]),
+                        new FlightStatsKey(line[FLIGHT_DELAY_INDEX], line[FLIGHT_CANCELLED_INDEX])
                 )
-        )
+        );
 
     }
 }
