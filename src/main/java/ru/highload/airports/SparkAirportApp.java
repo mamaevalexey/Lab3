@@ -47,7 +47,7 @@ public class SparkAirportApp {
         JavaPairRDD<String, String> airportPairs = airportsLinesParsed.mapToPair(
                 cols -> new Tuple2<>(cols[AIRPORT_CODE_INDEX], cols[AIRPORT_DESCRIPTION_INDEX])
         );
-        Map
+        Map<String, String> airportsMap = airportPairs.collectAsMap();
 
 
         final Broadcast<Map<String, AirportData>> airportsBroadcasted =
