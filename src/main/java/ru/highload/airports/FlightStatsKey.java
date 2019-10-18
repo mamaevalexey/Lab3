@@ -1,3 +1,5 @@
+package ru.highload.airports;
+
 import java.io.Serializable;
 
 public class FlightStatsKey implements Serializable {

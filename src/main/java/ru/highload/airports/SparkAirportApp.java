@@ -1,3 +1,5 @@
+package ru.highload.airports;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -23,14 +25,14 @@ public class SparkAirportApp {
 
         JavaRDD<String> flightsLines = sc.textFile(args[0]);
         JavaRDD<String[]> flightsLinesParsed = flightsLines
-                .map(line -> line.replaceAll("\"", "").split(","));
+                .map(CSVParser::makeCols);
         flightsLinesParsed = flightsLinesParsed
                 .filter(col -> !col[FLIGHT_DEST_AIRPORT_INDEX].equals(FLIGHT_DEST_AIRPORT_COLUMN_NAME));
 
 
         JavaRDD<String> airportsLines = sc.textFile(args[1]);
         JavaRDD<String[]> airportsLinesParsed = airportsLines
-                .map(line -> line.replaceAll("\"", "").split(","));
+                .map(CSVParser::makeCols);
         airportsLinesParsed = airportsLinesParsed
                 .filter(col -> !col[AIRPORT_CODE_INDEX].equals(AIRPORT_CODE_COLUMN_NAME));
 
@@ -42,15 +44,17 @@ public class SparkAirportApp {
                 )
         );
 
+        
+
     }
 }
 
 // Tasks:
 // a +
 // б +
-// в +-
+// в +
 // г +
-// д +-
+// д +
 // е
 // ё
 // ж
