@@ -1,6 +1,8 @@
 start-dfs.sh
 start-yarn.sh
 
+hadoop jar ~/hadoop-2.9.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar pi 2 5
+
 
 
 
