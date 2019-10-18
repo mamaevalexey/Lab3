@@ -16,7 +16,7 @@ public class SparkAirportApp {
                         split(","));
         flightsLinesParsed = flightsLinesParsed.filter(col -> !col[14].equals("DEST_AIRPORT_ID"));
 
-        
+
         JavaRDD<String> airportsLines = sc.textFile(args[1]);
         JavaRDD<String[]> airportsLinesParsed = airportsLines.map(line ->
                 line.replaceAll("\"", "").
