@@ -10,20 +10,21 @@ public class SparkAirportApp {
         SparkConf conf = new SparkConf().setAppName("Lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<String> fligtsLines = sc.textFile(args[0]);
+        JavaRDD<String> flightsLines = sc.textFile(args[0]);
+        JavaRDD<String[]> flightsLinesParsed = flightsLines.map(line ->
+                line.replaceAll("\"", "").
+                        split(","));
+        flightsLinesParsed = flightsLinesParsed.filter(col -> !col[14].equals("DEST_AIRPORT_ID"));
+
+        
         JavaRDD<String> airportsLines = sc.textFile(args[1]);
-
-        JavaRDD<String[]> parsedFLightsLines = fligtsLines.map(line ->
+        JavaRDD<String[]> airportsLinesParsed = airportsLines.map(line ->
                 line.replaceAll("\"", "").
                         split(","));
-        parsedFLightsLines = parsedFLightsLines.filter(col -> !col[14].equals("DEST_AIRPORT_ID"));
+        airportsLinesParsed = airportsLinesParsed.filter(col -> !col[0].equals("Code"));
 
-        JavaRDD<String[]> parsedAirportsLines = airportsLines.map(line ->
-                line.replaceAll("\"", "").
-                        split(","));
-        parsedAirportsLines = parsedAirportsLines.filter(col -> !col[0].equals("DEST_AIRPORT_ID"));
 
-        JavaPairRDD<Tuple2<String, String>, Integer> flightStatPairs = fligtsLines.mapToPair(
+        JavaPairRDD<Tuple2<String, String>, Integer> flightStatPairs = flightsLines.mapToPair(
                 line -> new Tuple2<>(
                         new Tuple2<>()
                 )
