@@ -25,8 +25,8 @@ public class SparkAirportApp {
     private static final String FLIGHT_INPUT_FILE = "664600583_T_ONTIME_sample.csv";
     private static final String AIRPORT_INPUT_FILE = "L_AIRPORT_ID.csv";
 
-    private static boolean notColumnName(int index, String columnName) {
-        
+    private static boolean notColumnName(String[] cols, int columnIndex, String columnName) {
+        return !cols[columnIndex].equals(columnName);
     }
 
     public static void main(String[] args) {
@@ -37,7 +37,7 @@ public class SparkAirportApp {
         JavaRDD<String> flightsLines = sc.textFile(FLIGHT_INPUT_FILE);
         JavaRDD<String[]> flightsLinesParsed = flightsLines
                 .map(CSVParser::makeCols)
-                .filter(col -> !col[FLIGHT_DEST_AIRPORT_INDEX].equals(FLIGHT_DEST_AIRPORT_COLUMN_NAME));
+                .filter(notColumnName(cols,));
 
         JavaPairRDD<Tuple2<String, String>, FlightStatsValueSerializable> flightStatPairs = flightsLinesParsed.mapToPair(
                 line -> new Tuple2<>(
