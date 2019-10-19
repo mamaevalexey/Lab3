@@ -25,8 +25,8 @@ public class SparkAirportApp {
     private static final String FLIGHT_INPUT_FILE = "664600583_T_ONTIME_sample.csv";
     private static final String AIRPORT_INPUT_FILE = "L_AIRPORT_ID.csv";
 
-    private static boolean isColumnName(String[] cols, int columnIndex, String columnName) {
-        return cols[columnIndex].equals(columnName);
+    private static boolean isNotColumnName(String[] cols, int columnIndex, String columnName) {
+        return !cols[columnIndex].equals(columnName);
     }
 
     private static String getFullAirportName(String[] cols){
@@ -47,7 +47,7 @@ public class SparkAirportApp {
         JavaRDD<String> flightsLines = sc.textFile(FLIGHT_INPUT_FILE);
         JavaRDD<String[]> flightsLinesParsed = flightsLines
                 .map(CSVParser::makeCols)
-                .filter(cols -> !isColumnName(cols, FLIGHT_DEST_AIRPORT_INDEX, FLIGHT_DEST_AIRPORT_COLUMN_NAME));
+                .filter(cols -> isNotColumnName(cols, FLIGHT_DEST_AIRPORT_INDEX, FLIGHT_DEST_AIRPORT_COLUMN_NAME));
 
         JavaPairRDD<Tuple2<String, String>, FlightStatsValueSerializable> flightStatPairs = flightsLinesParsed
                 .mapToPair(
@@ -64,7 +64,7 @@ public class SparkAirportApp {
         JavaRDD<String> airportsLines = sc.textFile(AIRPORT_INPUT_FILE);
         JavaRDD<String[]> airportsLinesParsed = airportsLines
                 .map(CSVParser::makeCols)
-                .filter(cols -> !isColumnName(cols, AIRPORT_CODE_INDEX, AIRPORT_CODE_COLUMN_NAME));
+                .filter(cols -> isNotColumnName(cols, AIRPORT_CODE_INDEX, AIRPORT_CODE_COLUMN_NAME));
 
         JavaPairRDD<String, String> airportsPairs = airportsLinesParsed.mapToPair(
                 cols -> new Tuple2<>(cols[AIRPORT_CODE_INDEX],
