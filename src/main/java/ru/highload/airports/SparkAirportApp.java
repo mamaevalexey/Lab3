@@ -29,13 +29,11 @@ public class SparkAirportApp {
         return !cols[columnIndex].equals(columnName);
     }
 
-    private static String getFullAirportName(String[] cols){
-        if (cols.length == 2) {
-            return cols[AIRPORT_DESCRIPTION_INDEX];
-        } else if (cols.length == 3){
-            return  cols[AIRPORT_DESCRIPTION_INDEX] + cols[AIRPORT_EXTRA_DESCRIPTION_INDEX];
+    private static String getFullAirportName(String[] cols) {
+        if (cols.length == 3) {
+            return cols[AIRPORT_DESCRIPTION_INDEX] + cols[AIRPORT_EXTRA_DESCRIPTION_INDEX];
         } else {
-            return null;
+            return cols[AIRPORT_DESCRIPTION_INDEX];
         }
     }
 
