@@ -2,7 +2,7 @@ package ru.highload.airports;
 
 import java.io.Serializable;
 
-public class FlightStatsValueSerializable implements Serializable {
+public class FlightStatsValue implements Serializable {
     private static final float EPS = 1e-9f;
 
     private float maxDelay;
@@ -10,14 +10,14 @@ public class FlightStatsValueSerializable implements Serializable {
     private int cancelledFlights;
     private int flights;
 
-    public FlightStatsValueSerializable(float maxDelay, int delayedFlights, int cancelledFlights, int flights) {
+    public FlightStatsValue(float maxDelay, int delayedFlights, int cancelledFlights, int flights) {
         this.maxDelay = maxDelay;
         this.delayedFlights = delayedFlights;
         this.cancelledFlights = cancelledFlights;
         this.flights = flights;
     }
 
-    public FlightStatsValueSerializable(String delay, String cancelled) {
+    public FlightStatsValue(String delay, String cancelled) {
         if (delay.equals("")) {
             this.maxDelay = 0.f;
             this.delayedFlights = 0;
@@ -47,8 +47,8 @@ public class FlightStatsValueSerializable implements Serializable {
     }
 
 
-    static FlightStatsValueSerializable add(FlightStatsValueSerializable a, FlightStatsValueSerializable b) {
-        return new FlightStatsValueSerializable(
+    static FlightStatsValue add(FlightStatsValue a, FlightStatsValue b) {
+        return new FlightStatsValue(
                 Math.max(a.getMaxDelay(), b.getMaxDelay()),
                 a.getDelayedFlights() + b.delayedFlights,
                 a.getCancelledFlights() + b.getCancelledFlights(),
