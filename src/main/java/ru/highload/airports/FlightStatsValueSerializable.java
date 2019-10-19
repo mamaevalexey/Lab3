@@ -59,7 +59,7 @@ public class FlightStatsValueSerializable implements Serializable {
     @Override
     public String toString() {
         return maxDelay + ", " +
-                ((float) delayedFlights / flights * 100f) + "%, " +
-                ((float) cancelledFlights / flights * 100f) + "% ";
+                Math.round((float) delayedFlights / flights * 100f) + "%, " +
+                Math.round((float) cancelledFlights / flights * 100f) + "% ";
     }
 }
