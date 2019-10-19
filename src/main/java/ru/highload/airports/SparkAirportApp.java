@@ -22,28 +22,31 @@ public class SparkAirportApp {
     private static final String AIRPORT_CODE_COLUMN_NAME = "Code";
     private static final String FLIGHT_DEST_AIRPORT_COLUMN_NAME = "DEST_AIRPORT_ID";
 
+    private static final String FLIGHT_INPUT_FILE = "664600583_T_ONTIME_sample.csv";
+    private static final String AIRPORT_INPUT_FILE = "L_AIRPORT_ID.csv";
+
     public static void main(String[] args) {
 
         SparkConf conf = new SparkConf().setAppName("Lab3");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<String> flightsLines = sc.textFile("664600583_T_ONTIME_sample.csv");
+        JavaRDD<String> flightsLines = sc.textFile(FLIGHT_INPUT_FILE);
         JavaRDD<String[]> flightsLinesParsed = flightsLines
                 .map(CSVParser::makeCols)
                 .filter(col -> !col[FLIGHT_DEST_AIRPORT_INDEX].equals(FLIGHT_DEST_AIRPORT_COLUMN_NAME));
 
-        JavaPairRDD<Tuple2<String, String>, FlightStatsKey> flightStatPairs = flightsLinesParsed.mapToPair(
+        JavaPairRDD<Tuple2<String, String>, FlightStatsValueSerializable> flightStatPairs = flightsLinesParsed.mapToPair(
                 line -> new Tuple2<>(
                         new Tuple2<>(line[FLIGHT_ORIGIN_AIRPORT_INDEX], line[FLIGHT_DEST_AIRPORT_INDEX]),
-                        new FlightStatsKey(line[FLIGHT_DELAY_INDEX], line[FLIGHT_CANCELLED_INDEX])
+                        new FlightStatsValueSerializable(line[FLIGHT_DELAY_INDEX], line[FLIGHT_CANCELLED_INDEX])
                 )
         );
 
-        JavaPairRDD<Tuple2<String, String>, FlightStatsKey> flightsStatPairsSummarized = flightStatPairs
-                .reduceByKey(FlightStatsKey::add);
+        JavaPairRDD<Tuple2<String, String>, FlightStatsValueSerializable> flightsStatPairsSummarized = flightStatPairs
+                .reduceByKey(FlightStatsValueSerializable::add);
 
 
-        JavaRDD<String> airportsLines = sc.textFile("L_AIRPORT_ID.csv");
+        JavaRDD<String> airportsLines = sc.textFile(AIRPORT_INPUT_FILE);
         JavaRDD<String[]> airportsLinesParsed = airportsLines
                 .map(CSVParser::makeCols)
                 .filter(col -> !col[AIRPORT_CODE_INDEX].equals(AIRPORT_CODE_COLUMN_NAME));
@@ -63,16 +66,6 @@ public class SparkAirportApp {
                         pair._2.toString()
         );
 
-        statsLines.saveAsTextFile("output3.4");
+        statsLines.saveAsTextFile(args[0]);
     }
 }
-
-// Tasks:
-// a +
-// б +
-// в +
-// г +
-// д +
-// е +
-// ё +
-// ж +
