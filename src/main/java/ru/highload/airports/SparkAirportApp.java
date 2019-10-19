@@ -25,6 +25,10 @@ public class SparkAirportApp {
     private static final String FLIGHT_INPUT_FILE = "664600583_T_ONTIME_sample.csv";
     private static final String AIRPORT_INPUT_FILE = "L_AIRPORT_ID.csv";
 
+    private static boolean notColumnName(int index, String columnName) {
+        
+    }
+
     public static void main(String[] args) {
 
         SparkConf conf = new SparkConf().setAppName("Lab3");
