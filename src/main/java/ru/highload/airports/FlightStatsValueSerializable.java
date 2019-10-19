@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class FlightStatsValueSerializable implements Serializable {
     private static final float EPS = 1e-9f;
+
     private float maxDelay;
     private int delayedFlights;
     private int cancelledFlights;
@@ -16,8 +17,8 @@ public class FlightStatsValueSerializable implements Serializable {
         this.flights = flights;
     }
 
-    public FlightStatsValueSerializable(String delay, String cancelled){
-        if (delay.equals("")){
+    public FlightStatsValueSerializable(String delay, String cancelled) {
+        if (delay.equals("")) {
             this.maxDelay = 0.f;
             this.delayedFlights = 0;
         } else {
@@ -44,6 +45,7 @@ public class FlightStatsValueSerializable implements Serializable {
     public int getFlights() {
         return flights;
     }
+
 
     static FlightStatsValueSerializable add(FlightStatsValueSerializable a, FlightStatsValueSerializable b) {
         return new FlightStatsValueSerializable(

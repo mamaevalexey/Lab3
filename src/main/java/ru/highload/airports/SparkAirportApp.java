@@ -25,8 +25,18 @@ public class SparkAirportApp {
     private static final String FLIGHT_INPUT_FILE = "664600583_T_ONTIME_sample.csv";
     private static final String AIRPORT_INPUT_FILE = "L_AIRPORT_ID.csv";
 
-    private static boolean notColumnName(String[] cols, int columnIndex, String columnName) {
-        return !cols[columnIndex].equals(columnName);
+    private static boolean isColumnName(String[] cols, int columnIndex, String columnName) {
+        return cols[columnIndex].equals(columnName);
+    }
+
+    private static String getFullAirportName(String[] cols){
+        if (cols.length == 2) {
+            return cols[AIRPORT_DESCRIPTION_INDEX];
+        } else if (cols.length == 3){
+            return  cols[AIRPORT_DESCRIPTION_INDEX] + cols[AIRPORT_EXTRA_DESCRIPTION_INDEX];
+        } else {
+            return null;
+        }
     }
 
     public static void main(String[] args) {
@@ -37,14 +47,15 @@ public class SparkAirportApp {
         JavaRDD<String> flightsLines = sc.textFile(FLIGHT_INPUT_FILE);
         JavaRDD<String[]> flightsLinesParsed = flightsLines
                 .map(CSVParser::makeCols)
-                .filter(cols -> notColumnName(cols, FLIGHT_DEST_AIRPORT_INDEX, FLIGHT_DEST_AIRPORT_COLUMN_NAME));
+                .filter(cols -> !isColumnName(cols, FLIGHT_DEST_AIRPORT_INDEX, FLIGHT_DEST_AIRPORT_COLUMN_NAME));
 
-        JavaPairRDD<Tuple2<String, String>, FlightStatsValueSerializable> flightStatPairs = flightsLinesParsed.mapToPair(
-                cols -> new Tuple2<>(
-                        new Tuple2<>(cols[FLIGHT_ORIGIN_AIRPORT_INDEX], cols[FLIGHT_DEST_AIRPORT_INDEX]),
-                        new FlightStatsValueSerializable(cols[FLIGHT_DELAY_INDEX], cols[FLIGHT_CANCELLED_INDEX])
-                )
-        );
+        JavaPairRDD<Tuple2<String, String>, FlightStatsValueSerializable> flightStatPairs = flightsLinesParsed
+                .mapToPair(
+                        cols -> new Tuple2<>(
+                                new Tuple2<>(cols[FLIGHT_ORIGIN_AIRPORT_INDEX], cols[FLIGHT_DEST_AIRPORT_INDEX]),
+                                new FlightStatsValueSerializable(cols[FLIGHT_DELAY_INDEX], cols[FLIGHT_CANCELLED_INDEX])
+                        )
+                );
 
         JavaPairRDD<Tuple2<String, String>, FlightStatsValueSerializable> flightsStatPairsSummarized = flightStatPairs
                 .reduceByKey(FlightStatsValueSerializable::add);
@@ -53,14 +64,14 @@ public class SparkAirportApp {
         JavaRDD<String> airportsLines = sc.textFile(AIRPORT_INPUT_FILE);
         JavaRDD<String[]> airportsLinesParsed = airportsLines
                 .map(CSVParser::makeCols)
-                .filter(col -> notColumnName(col, AIRPORT_CODE_INDEX, AIRPORT_CODE_COLUMN_NAME));
+                .filter(cols -> !isColumnName(cols, AIRPORT_CODE_INDEX, AIRPORT_CODE_COLUMN_NAME));
 
         JavaPairRDD<String, String> airportsPairs = airportsLinesParsed.mapToPair(
                 cols -> new Tuple2<>(cols[AIRPORT_CODE_INDEX],
-                        cols[AIRPORT_DESCRIPTION_INDEX] + (cols.length == 3 ? cols[AIRPORT_EXTRA_DESCRIPTION_INDEX] : ""))
+                        getFullAirportName(cols))
         );
-        Map<String, String> airportsMap = airportsPairs.collectAsMap();
 
+        Map<String, String> airportsMap = airportsPairs.collectAsMap();
         final Broadcast<Map<String, String>> airportsBroadcast =
                 sc.broadcast(airportsMap);
 
